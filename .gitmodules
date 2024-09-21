@@ -1,0 +1,3 @@
+[submodule "packages/bennie-ui"]
+	path = packages/bennie-ui
+	url = git@github.com:bennie-ui/bennie-ui.git
