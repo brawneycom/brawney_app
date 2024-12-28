@@ -1,7 +1,4 @@
-import { IconFigure } from "@bennie-ui/icons";
-import { ColorPropertiesType } from "@bennie-ui/types/attributes";
-import { TextSizeType, TextWeightType } from "@bennie-ui/types/texts";
-
+export type MenuVisualizationMode = "visualization" | "capture";
 export type MenuItemSelectMode = "single" | "multiple";
 
 export type MainMenu = {

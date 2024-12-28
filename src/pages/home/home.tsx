@@ -1,105 +1,167 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@bennie-ui/button";
-import { Section } from "@bennie-ui/section";
-import { Header } from "../../components/header";
-import { Authorized } from "../../components/auth";
-import { MenuItemSection } from "../../components/MainMenu";
-import { useMainMenu } from "../../contexts";
+//import { LineChart, AxisOptions } from "@bennie-ui/charts";
+
 import { Styles } from "./home.styles";
+import { useMainMenu } from "../../contexts";
+import { Authorized } from "../../components/auth";
+import { Chart, AxisOptions } from "react-charts";
+import ResizableBox from "./resizable-box";
+import MainPanel from "../../components/panels/MainPanel";
+import { Section } from "@bennie-ui/section";
+
+type DailyStars = {
+  date: string;
+  stars: number;
+};
+
+type Series = {
+  label: string;
+  data: DailyStars[];
+};
 
 export function HomeScreen() {
-  const { menu, onItemChange } = useMainMenu();
-  if (menu === null) {
-    return null;
-  }
+  const navigate = useNavigate();
+  const { reset } = useMainMenu();
 
-  const get_categories = () => {
-    let category = null;
-    let sub_category = null;
-    const [_, percentiles, measurements, __] = menu.categories.children;
+  const data: Series[] = [
+    {
+      label: "Weight",
+      data: [
+        {
+          date: "Thu",
+          stars: 40,
+        },
+        {
+          date: "Fri",
+          stars: 39.7,
+        },
+        {
+          date: "Sat",
+          stars: 39.4,
+        },
+        {
+          date: "Sun",
+          stars: 39.8,
+        },
+        {
+          date: "Mon",
+          stars: 39.5,
+        },
+        {
+          date: "Tue",
+          stars: 39.2,
+        },
+        {
+          date: "Wed",
+          stars: 39,
+        },
+        {
+          date: "Foo",
+          stars: 39.5,
+        },
+      ],
+    },
+    {
+      label: "Body fat",
+      data: [
+        {
+          date: "Thu",
+          stars: 39,
+        },
+        {
+          date: "Fri",
+          stars: 39.5,
+        },
+        {
+          date: "Sat",
+          stars: 39.7,
+        },
+        {
+          date: "Sun",
+          stars: 39.8,
+        },
+        {
+          date: "Mon",
+          stars: 39.8,
+        },
+        {
+          date: "Tue",
+          stars: 39.9,
+        },
+        {
+          date: "Wed",
+          stars: 40,
+        },
+        {
+          date: "Foo",
+          stars: 40,
+        },
+      ],
+    },
+  ];
 
-    if (percentiles.selected) {
-      category = percentiles;
-    }
+  const primaryAxis = React.useMemo(
+    (): AxisOptions<DailyStars> => ({
+      getValue: (datum) => datum.date,
+      elementType: "line",
+    }),
+    [],
+  );
 
-    if (measurements.selected) {
-      category = measurements;
-      sub_category = measurements;
+  const secondaryAxes = React.useMemo(
+    (): AxisOptions<DailyStars>[] => [
+      {
+        getValue: (datum) => datum.stars,
+        elementType: "line",
+      },
+    ],
+    [],
+  );
 
-      category.children.forEach((it) => {
-        if (it.selected) {
-          sub_category = it;
-        }
-      });
-    }
-    return { category, sub_category };
-  };
+  //const primaryAxis: AxisOptions<DailyStars> = {
+  //getValue: (datum) => {
+  //return datum.date;
+  //},
+  //type: "line",
+  //};
 
-  const { category, sub_category } = get_categories();
-
+  //const secondaryAxis: AxisOptions<DailyStars> = {
+  //getValue: (datum) => {
+  //return datum.stars;
+  //},
+  //type: "line",
+  //max: 40.5,
+  //min: 38.5,
+  //};
   return (
     <Authorized>
-      <Section className="absolute inset-0">
-        <Section {...Styles.wrapper}>
-          <Header />
-          <Section
-            flex={{ direction: "col", grow: "1" }}
-            padding={{ y: "8" }}
-            height={{ value: "full" }}
+      <MainPanel ui timespan>
+        <MainPanel.Content>
+          <ResizableBox>
+            <Chart
+              options={{
+                data,
+                primaryAxis,
+                secondaryAxes,
+              }}
+            />
+          </ResizableBox>
+        </MainPanel.Content>
+        <MainPanel.Actions>
+          <Button
+            {...Styles.actions.capture}
+            full_width
+            onClick={() => {
+              reset();
+              navigate("/capture");
+            }}
           >
-            <Section {...Styles.content.wrapper}>
-              <MenuItemSection
-                id="ui"
-                item={menu.ui}
-                properties={Styles.content.ui}
-                onItemChange={onItemChange}
-              />
-              <MenuItemSection
-                id="timespan"
-                item={menu.timespan}
-                properties={Styles.content.timespan}
-                onItemChange={onItemChange}
-              />
-              <Section
-                id="content"
-                height={{ value: "max" }}
-                flex={{
-                  direction: "col",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  grow: "1",
-                }}
-              >
-                Content
-              </Section>
-
-              <MenuItemSection
-                id="categories"
-                item={menu.categories}
-                properties={Styles.content.categories}
-                onItemChange={onItemChange}
-              />
-
-              {category && (
-                <MenuItemSection
-                  id={`categories.${category.name}`}
-                  item={category}
-                  properties={Styles.content.categories}
-                  onItemChange={onItemChange}
-                />
-              )}
-              {category && sub_category && (
-                <MenuItemSection
-                  id={`categories.${category.name}.${sub_category.name}`}
-                  item={sub_category}
-                  properties={Styles.content.categories}
-                  onItemChange={onItemChange}
-                />
-              )}
-            </Section>
-          </Section>
-          <Button {...Styles.capture}>Capture</Button>
-        </Section>
-      </Section>
+            Capture
+          </Button>
+        </MainPanel.Actions>
+      </MainPanel>
     </Authorized>
   );
 }

@@ -20,15 +20,17 @@ export const MenuItemSection: FC<MenuItemSectionProps> = ({
   return (
     <Section>
       <Section id={id} {...properties}>
-        {item.children.map((it: MenuItemType, index: number) => (
-          <MenuItem
-            parent_id={id}
-            key={index}
-            item={it}
-            is_last_item={index == item.children.length - 1}
-            onItemChange={onItemChange}
-          />
-        ))}
+        {item.children
+          .filter((it) => it.is_active)
+          .map((it: MenuItemType, index: number) => (
+            <MenuItem
+              parent_id={id}
+              key={index}
+              item={it}
+              is_last_item={index == item.children.length - 1}
+              onItemChange={onItemChange}
+            />
+          ))}
       </Section>
     </Section>
   );

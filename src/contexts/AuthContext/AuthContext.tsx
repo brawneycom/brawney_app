@@ -1,22 +1,49 @@
 import { createContext } from "react";
-import { V1SuccessResponse, Account } from "../../types";
-import { UseQueryResult } from "@tanstack/react-query";
-import { AxiosResponse } from "axios";
+import { ContextResult, Account, SignUpCredentials } from "../../types";
 
 type AuthContextProps = {
-  access_token: string | null;
-  me: UseQueryResult<
-    AxiosResponse<V1SuccessResponse<Account>, any> | undefined,
-    Error
-  >;
-  login: () => void;
+  me: {
+    result: ContextResult<Account>;
+  };
+  login: {
+    result: ContextResult<string>;
+    action: () => void;
+  };
+  sign_up: {
+    result: ContextResult<string>;
+    action: (account: SignUpCredentials) => void;
+  };
 };
 
 export const AuthContext = createContext<AuthContextProps>({
-  access_token: null,
-  // @ts-ignore
-  me: undefined,
-  login: () => {
-    console.log("noop");
+  me: {
+    result: {
+      loading: false,
+      status: "idle",
+      error: null,
+      data: null,
+    },
+  },
+  login: {
+    result: {
+      loading: false,
+      status: "idle",
+      error: null,
+      data: null,
+    },
+    action: () => {
+      console.log("f: noop");
+    },
+  },
+  sign_up: {
+    result: {
+      loading: false,
+      status: "idle",
+      error: null,
+      data: null,
+    },
+    action: (account: SignUpCredentials) => {
+      console.log("f: noop", account);
+    },
   },
 });

@@ -1,14 +1,17 @@
 import { FC, ReactNode, useEffect, useState } from "react";
 import { MainMenuContext } from "./MainMenuContext";
-import { MainMenu, MenuItem } from "../../types";
+import { MainMenu, MenuItem, MenuVisualizationMode } from "../../types";
 import { useAuth } from "../AuthContext";
 
 type MainProviderProps = {
   children: ReactNode;
+  mode: MenuVisualizationMode;
 };
-export const MainMenuProvider: FC<MainProviderProps> = ({ children }) => {
+export const MainMenuProvider: FC<MainProviderProps> = ({ children, mode }) => {
   const { me } = useAuth();
   const [menu, setMenu] = useState<MainMenu | null>(null);
+  const [category, setCategory] = useState<MenuItem | null>(null);
+  const [sub_category, setSubcategory] = useState<MenuItem | null>(null);
 
   const getMenuOptions = (parent_id: string): MenuItem | undefined => {
     if (menu) {
@@ -53,7 +56,7 @@ export const MainMenuProvider: FC<MainProviderProps> = ({ children }) => {
               return { ...it, selected: !it.selected };
             }
 
-            return item.select_mode === "single"
+            return item.select_mode === "single" || mode === "capture"
               ? { ...it, selected: false }
               : it;
           });
@@ -65,15 +68,80 @@ export const MainMenuProvider: FC<MainProviderProps> = ({ children }) => {
     }
   };
 
+  const reset = () => {
+    if (menu) {
+      const [weight, percentiles, measurements, vo2] = menu.categories.children;
+      const [fat, muscle] = percentiles.children;
+      const [upper, lower] = measurements.children;
+      const [chest, arms, stomach] = upper.children;
+      const [waist, thights, calves] = lower.children;
+
+      weight.selected = true;
+      percentiles.selected = false;
+      fat.selected = true;
+      muscle.selected = false;
+
+      measurements.selected = false;
+      upper.selected = true;
+      chest.selected = false;
+      arms.selected = true;
+      stomach.selected = false;
+
+      lower.selected = false;
+      waist.selected = true;
+      thights.selected = false;
+      calves.selected = false;
+
+      vo2.selected = false;
+
+      setCategory(null);
+      setSubcategory(null);
+    }
+  };
+
   useEffect(() => {
-    if (me?.data?.data?.result) {
-      const account = me.data.data.result;
+    if (me?.result.data) {
+      const account = me.result.data;
       setMenu(account.settings.menu_items);
     }
   }, [me]);
 
+  useEffect(() => {
+    if (menu) {
+      let category = null;
+      let sub_category = null;
+      const [weight, percentiles, measurements, vo2] = menu.categories.children;
+
+      if (weight.selected || vo2.selected) {
+        setCategory(null);
+        setSubcategory(null);
+      }
+
+      if (percentiles.selected) {
+        setCategory(percentiles);
+        setSubcategory(null);
+      }
+
+      if (measurements.selected) {
+        category = measurements;
+        sub_category = measurements;
+
+        category.children.forEach((it) => {
+          if (it.selected) {
+            sub_category = it;
+          }
+        });
+
+        setCategory(category);
+        setSubcategory(sub_category);
+      }
+    }
+  }, [menu]);
+
   return (
-    <MainMenuContext.Provider value={{ menu, onItemChange }}>
+    <MainMenuContext.Provider
+      value={{ menu, category, sub_category, reset, onItemChange }}
+    >
       {children}
     </MainMenuContext.Provider>
   );

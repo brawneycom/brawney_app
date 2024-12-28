@@ -1,13 +1,16 @@
 import { ComponentProperties } from "@bennie-ui/types";
 
-type MenuItemSectionProps = {
+type MainPanelStylesProps = {
   wrapper: ComponentProperties;
+  content: ComponentProperties;
+  navigation: ComponentProperties;
   ui: ComponentProperties;
   timespan: ComponentProperties;
   categories: ComponentProperties;
+  actions: ComponentProperties;
 };
 
-export const MenuItemStyles: MenuItemSectionProps = {
+export const Styles: MainPanelStylesProps = {
   wrapper: {
     flex: { direction: "col" },
     width: { value: "full" },
@@ -17,6 +20,10 @@ export const MenuItemStyles: MenuItemSectionProps = {
       text: { color: "gray" },
       background: { color: "gray", weight: "700" },
     },
+  },
+  navigation: {
+    colors: { text: { color: "white" } },
+    padding: { all: "4" },
   },
   ui: {
     grid: { flow: "col" },
@@ -28,6 +35,17 @@ export const MenuItemStyles: MenuItemSectionProps = {
     grid: { flow: "col" },
     flex: { direction: "row", justifyContent: "stretch" },
   },
+  content: {
+    id: "content",
+    height: { value: "max" },
+    flex: {
+      direction: "col",
+      justifyContent: "center",
+      alignItems: "center",
+      grow: "1",
+    },
+  },
+
   categories: {
     border: { width: { t: "2" } },
     colors: { border: { color: "gray" } },
@@ -36,5 +54,8 @@ export const MenuItemStyles: MenuItemSectionProps = {
       direction: "row",
       justifyContent: "stretch",
     },
+  },
+  actions: {
+    margin: { top: "4" },
   },
 };

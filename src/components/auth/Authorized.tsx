@@ -1,31 +1,47 @@
 import { FC, useEffect, ReactNode } from "react";
 import * as sentry from "@sentry/react";
-import { useAuth } from "../../contexts";
+import { useAuth, useNotifications } from "../../contexts";
 import { useNavigate } from "react-router-dom";
+
+import { Styles } from "./authorized.styles";
+import { Section } from "@bennie-ui/section";
+import { Header } from "../header";
 
 type AuthorizedProps = {
   children: ReactNode;
 };
 export const Authorized: FC<AuthorizedProps> = ({ children }) => {
   const navigate = useNavigate();
-  const { access_token, me } = useAuth();
-  const { status, error } = me;
+  const { setActiveNotification } = useNotifications();
+  const { me } = useAuth();
 
   useEffect(() => {
-    if (me.isError || access_token === null || me.data?.status === 204) {
-      navigate("/login");
+    if (me.result.status === "error") {
+      setActiveNotification({
+        name: "session_expired",
+        data: null,
+        duration: 3,
+      });
+      navigate("/welcome");
     }
-  }, [me, access_token]);
+  }, [me]);
 
-  useEffect(() => {
-    if (status === "error") {
-      sentry.captureException(error);
-      navigate("/forbidden");
-    }
-  }, [status, error]);
-
-  if (me.isLoading) {
+  if (me.result.loading) {
     return <>...Loading</>;
   }
-  return <>{children}</>;
+
+  return (
+    <Section className="absolute inset-0">
+      <Section {...Styles.wrapper}>
+        <Header />
+        <Section
+          flex={{ direction: "col", grow: "1" }}
+          padding={{ top: "8", bottom: "4" }}
+          height={{ value: "full" }}
+        >
+          {children}
+        </Section>
+      </Section>
+    </Section>
+  );
 };

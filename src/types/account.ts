@@ -5,7 +5,14 @@ export enum Theme {
   dark,
 }
 
-export type Credentials = {
+export type LoginCredentials = {
+  email: string;
+  password: string;
+};
+
+export type SignUpCredentials = {
+  firstname: string;
+  lastname: string;
   email: string;
   password: string;
 };

@@ -1,12 +1,7 @@
-import { createContext } from "react";
-import { MainMenu } from "../../types";
+import { createContext, useContext } from "react";
 
-type SearchContextProps = {
-  search: (menu: MainMenu) => void;
-};
+export type SearchContextProps = {};
 
-export const SearchContext = createContext<SearchContextProps>({
-  search: (menu: MainMenu) => {
-    console.log("f: noop", menu);
-  },
-});
+export const SearchContext = createContext<SearchContextProps>({});
+
+export const useSearch = () => useContext(SearchContext);

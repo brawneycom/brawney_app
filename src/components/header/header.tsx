@@ -1,9 +1,11 @@
-import { Text } from "@bennie-ui/text";
+import { Link } from "@bennie-ui/text";
 import { Button } from "@bennie-ui/button";
 import { Section } from "@bennie-ui/section";
 import { Icon } from "@bennie-ui/icons";
+import { useNavigate } from "react-router-dom";
 
 export function Header() {
+  const navigate = useNavigate();
   return (
     <Section
       flex={{
@@ -12,7 +14,11 @@ export function Header() {
       }}
     >
       <Section>
-        <Button>
+        <Button
+          onClick={() => {
+            navigate("/profile");
+          }}
+        >
           <Icon
             type="solid"
             figure="UserIcon"
@@ -22,12 +28,22 @@ export function Header() {
         </Button>
       </Section>
       <Section>
-        <Text size="2xl" weight="bold">
+        <Link
+          size="2xl"
+          weight="bold"
+          onClick={() => {
+            navigate("/");
+          }}
+        >
           Brawney
-        </Text>
+        </Link>
       </Section>
       <Section>
-        <Button>
+        <Button
+          onClick={() => {
+            navigate("/settings");
+          }}
+        >
           <Icon
             type="solid"
             figure="Cog6ToothIcon"
