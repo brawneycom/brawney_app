@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { MainMenu, MenuItem } from "../../types";
+import { MainMenu, MenuItem } from "~/types";
 
 type MainMenuContextProps = {
   menu: MainMenu | null;

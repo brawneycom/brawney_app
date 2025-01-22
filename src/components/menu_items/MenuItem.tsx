@@ -1,9 +1,9 @@
 import { FC } from "react";
-import { IconFigure, Icon } from "@bennie-ui/icons";
 import { Text } from "@bennie-ui/text";
 import { Section } from "@bennie-ui/section";
+import { IconFigure, Icon } from "@bennie-ui/icons";
 import { ComponentProperties } from "@bennie-ui/types";
-import { MenuItem as MenuItemType } from "../../types";
+import { MenuItem as MenuItemType } from "~/types";
 
 type MenuItemProps = {
   parent_id: string;
@@ -18,7 +18,7 @@ export const MenuItem: FC<MenuItemProps> = ({
   is_last_item,
   onItemChange,
 }) => {
-  const is_icon = item.content_type === "icon";
+  const is_icon = item.content_type === 2;
   const is_active = item.selected;
   let props: ComponentProperties = is_last_item
     ? {

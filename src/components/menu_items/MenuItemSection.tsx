@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Section } from "@bennie-ui/section";
 import { ComponentProperties } from "@bennie-ui/types";
-import { MenuItem as MenuItemType } from "../../types";
+import { MenuItem as MenuItemType } from "~/types";
 import { MenuItem } from "./MenuItem";
 
 type MenuItemSectionProps = {

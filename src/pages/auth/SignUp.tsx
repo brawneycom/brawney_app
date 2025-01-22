@@ -3,19 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { Text } from "@bennie-ui/text";
 import { Button } from "@bennie-ui/button";
 import { Section } from "@bennie-ui/section";
-import { Page } from "../../components/page";
-import { useAuth } from "../../contexts";
-import { SignUpCredentials } from "../../types";
+import { Page } from "~/components/page";
+import { useAuth } from "~/contexts";
+import { SignUpCredentials } from "~/types";
 
 export function SignUpScreen() {
   const navigate = useNavigate();
-  const { sign_up, access_token } = useAuth();
+  const { sign_up } = useAuth();
+  const { result } = sign_up;
 
   useEffect(() => {
-    if (access_token !== null) {
+    if (result !== null) {
       navigate("/");
     }
-  }, [access_token]);
+  }, [result]);
 
   return (
     <Page>
@@ -42,7 +43,7 @@ export function SignUpScreen() {
               email: "cbolanos2mx@gmail.com",
               password: "123456",
             };
-            sign_up(credentials);
+            sign_up.action(credentials);
           }}
         >
           Signup with Google

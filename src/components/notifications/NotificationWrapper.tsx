@@ -1,5 +1,5 @@
-import React, { FC, ReactElement } from "react";
-import { NotificationName, useNotifications } from "../../contexts";
+import { FC, ReactElement } from "react";
+import { NotificationName, useNotifications } from "~/contexts";
 import { Toast } from "@bennie-ui/toast";
 
 type NotificationWrapperProp = {
@@ -17,7 +17,7 @@ export const NotificationWrapper: FC<NotificationWrapperProp> = ({
 
   return isOpen ? (
     <Toast
-      action={activeNotification.action || "info"}      
+      action={activeNotification.action || "info"}
       duration={activeNotification.duration}
       dismissable
     >

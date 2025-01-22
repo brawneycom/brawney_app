@@ -2,11 +2,9 @@ import { useNavigate } from "react-router-dom";
 import { Text } from "@bennie-ui/text";
 import { Button } from "@bennie-ui/button";
 import { Section } from "@bennie-ui/section";
-import { Page } from "../components/page";
-
+import { Page } from "~/components/page";
 export function WelcomeScreen() {
   const navigate = useNavigate();
-
 
   return (
     <Page>

@@ -1,6 +1,6 @@
 import { Section } from "@bennie-ui/section";
+import { errors } from "~/constants/constants.errors";
 import { Error } from "./Error";
-import { errors } from "../../constants/constants.errors";
 
 export const ForbiddenError = () => {
   const { forbidden } = errors;

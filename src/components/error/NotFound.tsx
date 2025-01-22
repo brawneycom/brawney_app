@@ -1,6 +1,6 @@
 import { Section } from "@bennie-ui/section";
 import { Error } from "./Error";
-import { errors } from "../../constants/constants.errors";
+import { errors } from "~/constants/constants.errors";
 
 export const NotFoundError = () => {
   const { not_found } = errors;

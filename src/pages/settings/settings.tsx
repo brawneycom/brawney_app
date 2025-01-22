@@ -1,9 +1,10 @@
 import { Text } from "@bennie-ui/text";
 import { Button } from "@bennie-ui/button";
 import { Section } from "@bennie-ui/section";
-import { Header } from "../../components/header";
+import { Header } from "~/components/header";
+import { useAuth } from "~/contexts";
 
-import { Authorized } from "../../components/auth";
+import { Authorized } from "~/components/auth";
 import { ComponentProperties } from "@bennie-ui/types";
 
 const styles: ComponentProperties = {
@@ -18,10 +19,11 @@ const styles: ComponentProperties = {
   },
 };
 export function SettingsScreen() {
+  const { me } = useAuth();
   return (
     <Authorized>
       <Section className="absolute inset-0" {...styles}>
-        <Header />
+        <Header me={me.data} />
         <Section
           flex={{ justifyContent: "center", alignItems: "center" }}
           height={{ value: "1/6" }}

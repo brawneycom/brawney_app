@@ -1,4 +1,4 @@
-import { MainMenu, MenuItem } from "../../types";
+import { MainMenu, MenuItem } from "~/types";
 import { Category, SearchPayload } from "./SearchContext.types";
 
 const MapCategory = (item: MenuItem, value: string): Category => {
@@ -58,7 +58,6 @@ export const BuildSearchPayload = (menu: MainMenu) => {
 };
 
 export const BuildSearchQuery = (payload: SearchPayload | null): string => {
-  console.log("f: build search query", payload);
   return payload
     ? `${payload.ui.name}.${payload.timespan.name}.${payload.categories.map((it) => it.name).join("-")}`
     : "";

@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
 import "./sentry";
 
 import {
@@ -14,7 +16,7 @@ import { HomeScreen } from "./pages/home";
 import { WelcomeScreen } from "./pages/welcome";
 import { ProfileScreen } from "./pages/profile";
 import { SettingsScreen } from "./pages/settings";
-
+import { OnboardPage } from "./pages/onboard";
 import { LoginScreen, SignUpScreen } from "./pages/auth";
 import { Notifications } from "./components/notifications";
 import { BrawneyErrorBoundary, ForbiddenError } from "./components/error";
@@ -30,6 +32,7 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  const react_query_debug = false;
   return (
     <BrawneyErrorBoundary>
       <BrowserRouter>
@@ -49,6 +52,7 @@ function App() {
                   }
                 />
                 <Route path="/welcome" element={<WelcomeScreen />} />
+                <Route path="/onboard" element={<OnboardPage />} />
                 <Route
                   path="/capture"
                   element={
@@ -68,6 +72,7 @@ function App() {
               </Routes>
             </AuthProvider>
           </NotificationsProvider>
+          {react_query_debug && <ReactQueryDevtools initialIsOpen={false} />}
         </QueryClientProvider>
       </BrowserRouter>
     </BrawneyErrorBoundary>

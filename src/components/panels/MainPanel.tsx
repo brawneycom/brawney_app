@@ -1,9 +1,8 @@
 import React, { FC, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { Link } from "@bennie-ui/text";
 import { Section } from "@bennie-ui/section";
-import { useMainMenu } from "../../contexts";
+import { useMainMenu } from "~/contexts";
 import { MenuItemSection } from "../menu_items";
 import { Styles } from "./MainPanel.styles";
 

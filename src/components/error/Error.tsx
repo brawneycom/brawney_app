@@ -1,7 +1,7 @@
 import { FC, ReactNode } from "react";
 import { Text } from "@bennie-ui/text";
 import { Section } from "@bennie-ui/section";
-import { Page } from "../page";
+import { Page } from "~/components/page";
 
 type ErrorProps = {
   title: string;

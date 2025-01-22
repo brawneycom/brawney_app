@@ -1,11 +1,10 @@
 import { Text } from "@bennie-ui/text";
 import { Button } from "@bennie-ui/button";
 import { Section } from "@bennie-ui/section";
-import { Header } from "../../components/header";
-
-import { Authorized } from "../../components/auth";
 import { ComponentProperties } from "@bennie-ui/types";
-import { useAuth } from "../../contexts";
+import { Header } from "~/components/header";
+import { Authorized } from "~/components/auth";
+import { useAuth } from "~/contexts";
 
 const styles: ComponentProperties = {
   padding: { y: "4", x: "8" },
@@ -20,12 +19,12 @@ const styles: ComponentProperties = {
 };
 
 export function ProfileScreen() {
-  const { log_out } = useAuth();
+  const { me, log_out } = useAuth();
 
   return (
     <Authorized>
       <Section className="absolute inset-0" {...styles}>
-        <Header />
+        <Header me={me.data} />
 
         <Section
           flex={{ justifyContent: "center", alignItems: "center" }}
@@ -44,7 +43,7 @@ export function ProfileScreen() {
             size="sm"
             padding={{ x: "8", y: "2" }}
             colors={{ text: { color: "blue" }, background: { color: "white" } }}
-            onClick={log_out}
+            onClick={log_out.action}
           >
             Logout
           </Button>

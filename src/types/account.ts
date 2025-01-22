@@ -1,4 +1,4 @@
-import { MainMenu } from "./menus";
+import { MenuItem } from "./menus";
 
 export enum Theme {
   light,
@@ -21,6 +21,12 @@ export type Role = {
   name: string;
 };
 
+export type I18n = {
+  id: string;
+  locale: number;
+  system: number;
+};
+
 export type Account = {
   id: string;
   firstname: string;
@@ -28,8 +34,25 @@ export type Account = {
   email: string;
   settings: {
     id: string;
+    i18n: I18n;
     theme: Theme;
-    menu_items: MainMenu;
+    menu_items: MenuItem[];
   };
+  is_active: boolean;
+  onboard_account: boolean;
   roles: Role[];
+};
+
+export type AccountDataEntry = {
+  id: string;
+  date: string;
+  entry: number;
+  category: string;
+  system: number;
+  system_unit: number;
+};
+
+export type AccountDataSeries = {
+  label: string;
+  entries: AccountDataEntry[];
 };

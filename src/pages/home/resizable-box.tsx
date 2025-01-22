@@ -1,16 +1,24 @@
-import React from "react";
+import React, { FC, ReactNode } from "react";
 import { ResizableBox as ReactResizableBox } from "react-resizable";
 
 import "react-resizable/css/styles.css";
 
-export default function ResizableBox({
+type ResizableBoxProps = {
+  children: ReactNode;
+  width?: number;
+  height?: number;
+  resizable?: boolean;
+  style?: object;
+  className?: string;
+};
+export const ResizableBox: FC<ResizableBoxProps> = ({
   children,
   width = 300,
   height = 500,
   resizable = true,
   style = {},
   className = "",
-}) {
+}) => {
   return (
     <div style={{ marginLeft: 20 }}>
       <div
@@ -50,5 +58,4 @@ export default function ResizableBox({
       </div>
     </div>
   );
-}
-
+};

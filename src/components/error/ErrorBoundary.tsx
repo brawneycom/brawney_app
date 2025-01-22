@@ -1,7 +1,7 @@
 import { FC, ReactNode } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { Page } from "../page";
+import { Page } from "~/components/page";
 import { InternalServerError } from "./InternalServerError";
 
 type BrawneyErrorProps = {

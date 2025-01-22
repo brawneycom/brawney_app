@@ -1,11 +1,9 @@
 import { FC, useEffect, ReactNode } from "react";
-import * as sentry from "@sentry/react";
-import { useAuth, useNotifications } from "../../contexts";
 import { useNavigate } from "react-router-dom";
-
-import { Styles } from "./authorized.styles";
 import { Section } from "@bennie-ui/section";
-import { Header } from "../header";
+import { Header } from "~/components/header";
+import { useAuth, useNotifications } from "~/contexts";
+import { Styles } from "./authorized.styles";
 
 type AuthorizedProps = {
   children: ReactNode;
@@ -13,10 +11,10 @@ type AuthorizedProps = {
 export const Authorized: FC<AuthorizedProps> = ({ children }) => {
   const navigate = useNavigate();
   const { setActiveNotification } = useNotifications();
-  const { me } = useAuth();
+  const { me, login, sign_up } = useAuth();
 
   useEffect(() => {
-    if (me.result.status === "error") {
+    if (me.status === "error") {
       setActiveNotification({
         name: "session_expired",
         data: null,
@@ -24,16 +22,22 @@ export const Authorized: FC<AuthorizedProps> = ({ children }) => {
       });
       navigate("/welcome");
     }
+
+    if (me.data) {
+      if (me.data?.onboard_account === true) {
+        navigate("/onboard");
+      }
+    }
   }, [me]);
 
-  if (me.result.loading) {
+  if (me.loading) {
     return <>...Loading</>;
   }
 
   return (
     <Section className="absolute inset-0">
       <Section {...Styles.wrapper}>
-        <Header />
+        <Header me={me.data} />
         <Section
           flex={{ direction: "col", grow: "1" }}
           padding={{ top: "8", bottom: "4" }}

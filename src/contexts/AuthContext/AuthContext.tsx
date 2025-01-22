@@ -1,49 +1,43 @@
 import { createContext } from "react";
-import { ContextResult, Account, SignUpCredentials } from "../../types";
+import { ContextResult, Account, SignUpCredentials } from "~/types";
 
 type AuthContextProps = {
-  me: {
-    result: ContextResult<Account>;
-  };
+  me: ContextResult<Account>;
   login: {
-    result: ContextResult<string>;
+    result: null | string;
     action: () => void;
   };
   sign_up: {
-    result: ContextResult<string>;
+    result: null | string;
     action: (account: SignUpCredentials) => void;
+  };
+  log_out: {
+    action: () => void;
   };
 };
 
 export const AuthContext = createContext<AuthContextProps>({
   me: {
-    result: {
-      loading: false,
-      status: "idle",
-      error: null,
-      data: null,
-    },
+    loading: true,
+    data: null,
+    error: null,
+    status: "idle",
   },
   login: {
-    result: {
-      loading: false,
-      status: "idle",
-      error: null,
-      data: null,
-    },
+    result: null,
     action: () => {
       console.log("f: noop");
     },
   },
   sign_up: {
-    result: {
-      loading: false,
-      status: "idle",
-      error: null,
-      data: null,
-    },
+    result: "",
     action: (account: SignUpCredentials) => {
       console.log("f: noop", account);
+    },
+  },
+  log_out: {
+    action: () => {
+      console.log("f: noop");
     },
   },
 });

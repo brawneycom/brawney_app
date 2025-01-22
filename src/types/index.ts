@@ -1,6 +1,6 @@
-import { AxiosResponse } from "axios";
 export * from "./menus";
 export * from "./account";
+export * from "./series";
 
 export type V1SuccessResponse<T> = {
   success: boolean;
@@ -13,5 +13,5 @@ export type ContextResult<T> = {
   loading: boolean;
   status: string;
   error: Error | undefined | null;
-  data: T | null;
+  data: T | undefined | null;
 };

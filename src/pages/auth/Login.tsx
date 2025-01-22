@@ -3,18 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { Text } from "@bennie-ui/text";
 import { Button } from "@bennie-ui/button";
 import { Section } from "@bennie-ui/section";
-import { Page } from "../../components/page";
-import { useAuth } from "../../contexts";
+import { Page } from "~/components/page";
+import { useAuth } from "~/contexts";
 
 export function LoginScreen() {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { result } = login;
 
   useEffect(() => {
-    if (login.result.status === "done" && login.result.data !== null) {
+    if (result !== null) {
       navigate("/");
     }
-  }, [login]);
+  }, [result]);
 
   return (
     <Page>

@@ -16,8 +16,9 @@ export type MainMenuState = {
 export type MenuItem = {
   id: string;
   name: string;
+  mode: "single" | "multiple";
   content: string;
-  content_type: string;
+  content_type: number;
   is_active: boolean;
   selected: boolean;
   select_mode: string;

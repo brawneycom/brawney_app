@@ -1,6 +1,6 @@
 import { FC, ReactNode, useEffect, useState } from "react";
 import { MainMenuContext } from "./MainMenuContext";
-import { MainMenu, MenuItem, MenuVisualizationMode } from "../../types";
+import { MainMenu, MenuItem, MenuVisualizationMode } from "~/types";
 import { useAuth } from "../AuthContext";
 
 type MainProviderProps = {
@@ -22,8 +22,7 @@ export const MainMenuProvider: FC<MainProviderProps> = ({ children, mode }) => {
       }
 
       if (ids.length === 2) {
-        // @ts-ignore
-        const child = menu[ids[0]] as MenuItem | undefined;
+        const child = menu[ids[0] as keyof MainMenu] as MenuItem | undefined;
         const sub_menu = child?.children.find(
           (it: MenuItem) => it.name === ids[1],
         );
@@ -31,15 +30,14 @@ export const MainMenuProvider: FC<MainProviderProps> = ({ children, mode }) => {
       }
 
       if (ids.length === 3) {
-        // @ts-ignore
-        const child = menu[ids[0]] as MenuItem;
+        const child = menu[ids[0] as keyof MainMenu] as MenuItem;
         const sub_menu = child.children.find(
           (it: MenuItem) => it.name === ids[1],
         );
-        // @ts-ignore
-        const grand_child = sub_menu.children.find(
-          (it: MenuItem) => it.name === ids[2],
-        );
+
+        const grand_child =
+          sub_menu?.children.find((it: MenuItem) => it.name === ids[2]) ||
+          undefined;
         return grand_child;
       }
     }
@@ -74,7 +72,7 @@ export const MainMenuProvider: FC<MainProviderProps> = ({ children, mode }) => {
       const [fat, muscle] = percentiles.children;
       const [upper, lower] = measurements.children;
       const [chest, arms, stomach] = upper.children;
-      const [waist, thights, calves] = lower.children;
+      const [waist, thights] = lower.children;
 
       weight.selected = true;
       percentiles.selected = false;
@@ -90,7 +88,6 @@ export const MainMenuProvider: FC<MainProviderProps> = ({ children, mode }) => {
       lower.selected = false;
       waist.selected = true;
       thights.selected = false;
-      calves.selected = false;
 
       vo2.selected = false;
 
@@ -100,9 +97,13 @@ export const MainMenuProvider: FC<MainProviderProps> = ({ children, mode }) => {
   };
 
   useEffect(() => {
-    if (me?.result.data) {
-      const account = me.result.data;
-      setMenu(account.settings.menu_items);
+    if (me?.data) {
+      const account = me.data;
+      setMenu({
+        ui: account.settings.menu_items[0],
+        categories: account.settings.menu_items[1],
+        timespan: account.settings.menu_items[2],
+      });
     }
   }, [me]);
 
