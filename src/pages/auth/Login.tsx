@@ -8,14 +8,13 @@ import { useAuth } from "~/contexts";
 
 export function LoginScreen() {
   const navigate = useNavigate();
-  const { login } = useAuth();
-  const { result } = login;
+  const { me, loading, error, login } = useAuth();
 
   useEffect(() => {
-    if (result !== null) {
+    if (me && loading === false && error === null) {
       navigate("/");
     }
-  }, [result]);
+  }, [me]);
 
   return (
     <Page>
@@ -36,7 +35,7 @@ export function LoginScreen() {
           size="sm"
           padding={{ x: "8", y: "2" }}
           colors={{ text: { color: "blue" }, background: { color: "white" } }}
-          onClick={login.action}
+          onClick={login}
         >
           Login with Google
         </Button>

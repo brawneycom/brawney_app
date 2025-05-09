@@ -4,9 +4,10 @@ import { FC, ReactNode, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { SearchContext } from "./SearchContext";
 import { useMainMenu } from "../MainMenuContext";
+import { useAuth } from "../AuthContext/";
 import { SearchPayload } from "./SearchContext.types";
 import { BuildSearchPayload } from "./SearchContext.utils";
-import { read_access_token } from "~/utils/access_token";
+import { read_access_token } from "~/utils/storage/access_token";
 import {
   AccountDataSeries,
   DailyValue,
@@ -28,6 +29,7 @@ const getKey = (payload: SearchPayload | null): string => {
 };
 
 export const SearchProvider: FC<SearchProviderProps> = ({ children }) => {
+  const { access_token } = useAuth();
   const { menu } = useMainMenu();
   const [payload, setPayload] = useState<SearchPayload | null>(null);
   const [series, setSeries] = useState<Serie[]>([]);
@@ -43,9 +45,9 @@ export const SearchProvider: FC<SearchProviderProps> = ({ children }) => {
     queryFn: (): Promise<
       AxiosResponse<V1SuccessResponse<AccountDataSeries[]>>
     > => {
-      return axios.post(`${API_URL}/account/me/entries`, payload, {
+      return axios.post(`${API_URL}/v1/account/me/entries`, payload, {
         headers: {
-          Authorization: `Bearer ${read_access_token()}`,
+          Authorization: `Bearer ${access_token}`,
         },
       });
     },

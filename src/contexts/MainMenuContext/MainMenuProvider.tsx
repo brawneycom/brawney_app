@@ -1,14 +1,24 @@
 import { FC, ReactNode, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { MainMenuContext } from "./MainMenuContext";
 import { MainMenu, MenuItem, MenuVisualizationMode } from "~/types";
 import { useAuth } from "../AuthContext";
 
 type MainProviderProps = {
   children: ReactNode;
-  mode: MenuVisualizationMode;
 };
-export const MainMenuProvider: FC<MainProviderProps> = ({ children, mode }) => {
+
+type SearchParams = {
+  view: string;
+  section: string;
+  timespan: string;
+  categories?: string[] | null;
+  sub_categories?: string[] | null;
+};
+
+export const MainMenuProvider: FC<MainProviderProps> = ({ children }) => {
   const { me } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [menu, setMenu] = useState<MainMenu | null>(null);
   const [category, setCategory] = useState<MenuItem | null>(null);
   const [sub_category, setSubcategory] = useState<MenuItem | null>(null);
@@ -54,7 +64,7 @@ export const MainMenuProvider: FC<MainProviderProps> = ({ children, mode }) => {
               return { ...it, selected: !it.selected };
             }
 
-            return item.select_mode === "single" || mode === "capture"
+            return item.select_mode === "single"
               ? { ...it, selected: false }
               : it;
           });
@@ -96,14 +106,90 @@ export const MainMenuProvider: FC<MainProviderProps> = ({ children, mode }) => {
     }
   };
 
+  const initializeMenuFromSearchParams = (
+    searchParams: URLSearchParams,
+    menu_items: MenuItem[],
+  ): MainMenu => {
+    const section =
+      (searchParams.has("section") && searchParams.get("section")) || "weight";
+    const timespan =
+      (searchParams.has("timespan") && searchParams.get("timespan")) || "m";
+
+    const categories =
+      searchParams.has("categories") &&
+      searchParams.getAll("categories").join(",");
+
+    const section_override = {
+      ...menu_items[1],
+      children: menu_items[1].children.map((it) => {
+        return {
+          ...it,
+          selected: it.name === section,
+          children: it.children.map((ot) => {
+            return {
+              ...ot,
+              selected: categories
+                ? categories.toString().includes(ot.name)
+                : ot.selected,
+            };
+          }),
+        };
+      }),
+    };
+
+    const timespan_override = {
+      ...menu_items[2],
+      children: menu_items[2].children.map((it) => {
+        return { ...it, selected: it.name === timespan };
+      }),
+    };
+
+    const menu: MainMenu = {
+      ui: menu_items[0],
+      categories: section_override,
+      timespan: timespan_override,
+    };
+
+    return menu;
+  };
+
+  const updateSearchParams = (menu: MainMenu) => {
+    const timespan = menu.timespan.children.find((it) => it.selected);
+    const section = menu.categories.children.find((it) => it.selected);
+    let categories: MenuItem[];
+    let sub_categories: MenuItem[];
+
+    let searchParams: SearchParams = {
+      view: "ui",
+      section: section?.name || "weight",
+      timespan: timespan?.name || "w",
+    };
+
+    if (section) {
+      categories = section?.children.filter((it) => it.selected);
+      const categories_key = categories.map((it) => it.name);
+      searchParams.categories = categories_key;
+    }
+
+    if (categories) {
+      const selected_sub_category = categories?.find((it) => it.selected);
+      if (selected_sub_category) {
+      }
+      //const categories_key = sub_categories.map((it) => it.name);
+      //searchParams.categories = categories_key;
+    }
+    // @ts-ignore
+    setSearchParams({ ...searchParams });
+  };
+
   useEffect(() => {
-    if (me?.data) {
-      const account = me.data;
-      setMenu({
-        ui: account.settings.menu_items[0],
-        categories: account.settings.menu_items[1],
-        timespan: account.settings.menu_items[2],
-      });
+    if (me) {
+      const account = me;
+      const menu = initializeMenuFromSearchParams(
+        searchParams,
+        account.settings.menu_items,
+      );
+      setMenu(menu);
     }
   }, [me]);
 
@@ -113,14 +199,28 @@ export const MainMenuProvider: FC<MainProviderProps> = ({ children, mode }) => {
       let sub_category = null;
       const [weight, percentiles, measurements, vo2] = menu.categories.children;
 
-      if (weight.selected || vo2.selected) {
+      if (weight.selected) {
+        setCategory(null);
+        setSubcategory(null);
+      }
+
+      if (vo2.selected) {
         setCategory(null);
         setSubcategory(null);
       }
 
       if (percentiles.selected) {
-        setCategory(percentiles);
-        setSubcategory(null);
+        category = percentiles;
+        sub_category = percentiles;
+
+        category.children.forEach((it) => {
+          if (it.selected) {
+            sub_category = it;
+          }
+        });
+
+        setCategory(category);
+        setSubcategory(sub_category);
       }
 
       if (measurements.selected) {
@@ -136,9 +236,12 @@ export const MainMenuProvider: FC<MainProviderProps> = ({ children, mode }) => {
         setCategory(category);
         setSubcategory(sub_category);
       }
+
+      updateSearchParams(menu);
     }
   }, [menu]);
 
+  console.log("f: data", { category, sub_category });
   return (
     <MainMenuContext.Provider
       value={{ menu, category, sub_category, reset, onItemChange }}

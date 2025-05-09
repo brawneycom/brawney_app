@@ -9,14 +9,13 @@ import { SignUpCredentials } from "~/types";
 
 export function SignUpScreen() {
   const navigate = useNavigate();
-  const { sign_up } = useAuth();
-  const { result } = sign_up;
 
+  const { loading, status, access_token, sign_up } = useAuth();
   useEffect(() => {
-    if (result !== null) {
+    if (loading === false && status === "done" && access_token != null) {
       navigate("/");
     }
-  }, [result]);
+  }, [status, access_token]);
 
   return (
     <Page>
@@ -43,7 +42,7 @@ export function SignUpScreen() {
               email: "cbolanos2mx@gmail.com",
               password: "123456",
             };
-            sign_up.action(credentials);
+            sign_up(credentials);
           }}
         >
           Signup with Google

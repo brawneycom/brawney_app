@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router";
+import { Section } from "@bennie-ui/section";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -39,40 +40,38 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <NotificationsProvider>
             <AuthProvider>
-              <Notifications />
-              <Routes>
-                <Route
-                  path="/"
-                  element={
-                    <MainMenuProvider mode="visualization">
+              <MainMenuProvider>
+                <Notifications />
+                <Routes>
+                  <Route
+                    path="/"
+                    element={
                       <SearchProvider>
                         <HomeScreen />
                       </SearchProvider>
-                    </MainMenuProvider>
-                  }
-                />
-                <Route path="/welcome" element={<WelcomeScreen />} />
-                <Route path="/onboard" element={<OnboardPage />} />
-                <Route
-                  path="/capture"
-                  element={
-                    <MainMenuProvider mode="capture">
+                    }
+                  />
+                  <Route path="/onboard" element={<OnboardPage />} />
+                  <Route
+                    path="/capture"
+                    element={
                       <SearchProvider>
                         <CaptureScreen />
                       </SearchProvider>
-                    </MainMenuProvider>
-                  }
-                />
-                <Route path="/profile" element={<ProfileScreen />} />
-                <Route path="/settings" element={<SettingsScreen />} />
+                    }
+                  />
 
-                <Route path="/login" element={<LoginScreen />} />
-                <Route path="/signup" element={<SignUpScreen />} />
-                <Route path="/forbidden" element={<ForbiddenError />} />
-              </Routes>
+                  <Route path="/welcome" element={<WelcomeScreen />} />
+                  <Route path="/profile" element={<ProfileScreen />} />
+                  <Route path="/settings" element={<SettingsScreen />} />
+
+                  <Route path="/login" element={<LoginScreen />} />
+                  <Route path="/signup" element={<SignUpScreen />} />
+                  <Route path="/forbidden" element={<ForbiddenError />} />
+                </Routes>
+              </MainMenuProvider>
             </AuthProvider>
           </NotificationsProvider>
-          {react_query_debug && <ReactQueryDevtools initialIsOpen={false} />}
         </QueryClientProvider>
       </BrowserRouter>
     </BrawneyErrorBoundary>

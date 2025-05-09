@@ -1,10 +1,9 @@
 import React from "react";
 import { Chart, AxisOptions } from "react-charts";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@bennie-ui/button";
-
 import { Styles } from "./home.styles";
-import { Serie, DailyValue } from "~/types";
+import { DailyValue } from "~/types";
 import { Authorized } from "~/components/auth";
 import { ResizableBox } from "./resizable-box";
 import { useMainMenu, useSearch } from "~/contexts";
@@ -12,6 +11,7 @@ import MainPanel from "~/components/panels/MainPanel";
 
 export function HomeScreen() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { reset } = useMainMenu();
   const { loading, is_empty, series } = useSearch();
 
@@ -33,7 +33,6 @@ export function HomeScreen() {
     [],
   );
 
-  //console.log("f: home", { loading, is_empty, series });
   return (
     <Authorized>
       <MainPanel ui timespan>
@@ -59,7 +58,8 @@ export function HomeScreen() {
             full_width
             onClick={() => {
               reset();
-              navigate("/capture");
+              navigate(`/capture?${searchParams.toString()}`);
+
             }}
           >
             Capture

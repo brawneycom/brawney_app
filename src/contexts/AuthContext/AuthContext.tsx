@@ -1,43 +1,38 @@
 import { createContext } from "react";
-import { ContextResult, Account, SignUpCredentials } from "~/types";
+import { RequestStatus, Account, SignUpCredentials } from "~/types";
 
 type AuthContextProps = {
-  me: ContextResult<Account>;
-  login: {
-    result: null | string;
-    action: () => void;
-  };
-  sign_up: {
-    result: null | string;
-    action: (account: SignUpCredentials) => void;
-  };
-  log_out: {
-    action: () => void;
-  };
+  me: Account | null;
+  loading: boolean;
+  error: Error | null;
+  status: RequestStatus;
+  access_token: null | string;
+  login: () => void;
+  sign_up: (account: SignUpCredentials) => void;
+  log_out: () => void;
+  fetch: (access_token: string) => void;
+  renew: () => void;
 };
 
 export const AuthContext = createContext<AuthContextProps>({
-  me: {
-    loading: true,
-    data: null,
-    error: null,
-    status: "idle",
+  me: null,
+  loading: false,
+  error: null,
+  status: "idle",
+  access_token: null,
+  login: () => {
+    console.log("f: noop");
   },
-  login: {
-    result: null,
-    action: () => {
-      console.log("f: noop");
-    },
+  sign_up: (account: SignUpCredentials) => {
+    console.log("f: noop", account);
   },
-  sign_up: {
-    result: "",
-    action: (account: SignUpCredentials) => {
-      console.log("f: noop", account);
-    },
+  log_out: () => {
+    console.log("f: noop");
   },
-  log_out: {
-    action: () => {
-      console.log("f: noop");
-    },
+  fetch: (access_token: string) => {
+    console.log("f: noop", access_token);
+  },
+  renew: () => {
+    console.log("f: noop");
   },
 });

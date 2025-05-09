@@ -11,33 +11,34 @@ type AuthorizedProps = {
 export const Authorized: FC<AuthorizedProps> = ({ children }) => {
   const navigate = useNavigate();
   const { setActiveNotification } = useNotifications();
-  const { me, login, sign_up } = useAuth();
+  const { me, status, loading, error, access_token, fetch, renew } = useAuth();
 
   useEffect(() => {
-    if (me.status === "error") {
-      setActiveNotification({
-        name: "session_expired",
-        data: null,
-        duration: 3,
-      });
+    if (access_token === null && loading === false) {
       navigate("/welcome");
     }
-
-    if (me.data) {
-      if (me.data?.onboard_account === true) {
-        navigate("/onboard");
-      }
+    if (me == null && loading == false && error === null) {
+      navigate("/");
     }
-  }, [me]);
+  }, [access_token, me]);
 
-  if (me.loading) {
-    return <>...Loading</>;
+  useEffect(() => {
+    if (loading == false && error?.message.includes("token expired")) {
+      navigate("/login");
+    }
+
+    if (loading == false && error?.message.includes("something went wrong")) {
+      navigate("/error");
+    }
+  }, [loading, error]);
+
+  if (status === "pending" && loading) {
+    return <Section>Loading...</Section>;
   }
-
   return (
     <Section className="absolute inset-0">
       <Section {...Styles.wrapper}>
-        <Header me={me.data} />
+        <Header me={me} />
         <Section
           flex={{ direction: "col", grow: "1" }}
           padding={{ top: "8", bottom: "4" }}
