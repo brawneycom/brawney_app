@@ -1,9 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router";
-import { Section } from "@bennie-ui/section";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-import "./sentry";
+// import "./sentry";
 
 import {
   AuthProvider,
@@ -26,14 +25,13 @@ import "./App.css";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: Infinity,
-      refetchOnWindowFocus: true,
+      staleTime: 30 * 60 * 1000,
+      refetchOnWindowFocus: false,
     },
   },
 });
 
 function App() {
-  const react_query_debug = false;
   return (
     <BrawneyErrorBoundary>
       <BrowserRouter>
@@ -51,7 +49,6 @@ function App() {
                       </SearchProvider>
                     }
                   />
-                  <Route path="/onboard" element={<OnboardPage />} />
                   <Route
                     path="/capture"
                     element={
@@ -61,6 +58,7 @@ function App() {
                     }
                   />
 
+                  <Route path="/onboard" element={<OnboardPage />} />
                   <Route path="/welcome" element={<WelcomeScreen />} />
                   <Route path="/profile" element={<ProfileScreen />} />
                   <Route path="/settings" element={<SettingsScreen />} />
@@ -72,6 +70,7 @@ function App() {
               </MainMenuProvider>
             </AuthProvider>
           </NotificationsProvider>
+
         </QueryClientProvider>
       </BrowserRouter>
     </BrawneyErrorBoundary>

@@ -156,8 +156,8 @@ export const MainMenuProvider: FC<MainProviderProps> = ({ children }) => {
   const updateSearchParams = (menu: MainMenu) => {
     const timespan = menu.timespan.children.find((it) => it.selected);
     const section = menu.categories.children.find((it) => it.selected);
-    let categories: MenuItem[];
-    let sub_categories: MenuItem[];
+    let categories: MenuItem[] = [];
+    // let sub_categories: MenuItem[];
 
     let searchParams: SearchParams = {
       view: "ui",
@@ -241,7 +241,6 @@ export const MainMenuProvider: FC<MainProviderProps> = ({ children }) => {
     }
   }, [menu]);
 
-  console.log("f: data", { category, sub_category });
   return (
     <MainMenuContext.Provider
       value={{ menu, category, sub_category, reset, onItemChange }}

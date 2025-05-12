@@ -28,7 +28,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     onSuccess: (response) => {
       SetSession(response);
     },
-    onError: () => {},
+    onError: () => { },
   });
 
   const sign_up_mutation = useMutation({
@@ -38,7 +38,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     onSuccess: (response) => {
       SetSession(response);
     },
-    onError: () => {},
+    onError: () => { },
   });
 
   const renew_token_mutation = useMutation({
@@ -153,6 +153,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     }
   }, [status, error]);
 
+  // console.log('f: auth', { loading: state.loading })
   return (
     <AuthContext.Provider
       value={{

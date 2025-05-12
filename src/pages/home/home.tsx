@@ -57,7 +57,7 @@ export function HomeScreen() {
             {...Styles.actions.capture}
             full_width
             onClick={() => {
-              reset();
+              // reset();
               navigate(`/capture?${searchParams.toString()}`);
 
             }}

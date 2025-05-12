@@ -1,31 +1,23 @@
-import axios, { AxiosResponse } from "axios";
 import dayjs from "dayjs";
-import { FC, ReactNode, useEffect, useState } from "react";
+import axios, { AxiosResponse } from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { SearchContext } from "./SearchContext";
-import { useMainMenu } from "../MainMenuContext";
+import { FC, ReactNode, useEffect, useState } from "react";
+
 import { useAuth } from "../AuthContext/";
+import { useMainMenu } from "../MainMenuContext";
+import { SearchContext } from "./SearchContext";
 import { SearchPayload } from "./SearchContext.types";
 import { BuildSearchPayload } from "./SearchContext.utils";
-import { read_access_token } from "~/utils/storage/access_token";
 import {
   AccountDataSeries,
   DailyValue,
   Serie,
   V1SuccessResponse,
 } from "~/types";
-import { API_URL } from "~/constants";
+import { API_URL, EMPTY_DATETIME, SHORT_DATE_FORMAT } from "~/constants";
 
 export type SearchProviderProps = {
   children: ReactNode;
-};
-
-const getKey = (payload: SearchPayload | null): string => {
-  if (payload) {
-    const key = `ui:${payload.ui.value}, timespan:${payload.timespan.value}, categories:${payload.categories.map((it) => it.name).join("|")}'`;
-    return key;
-  }
-  return "";
 };
 
 export const SearchProvider: FC<SearchProviderProps> = ({ children }) => {
@@ -35,12 +27,12 @@ export const SearchProvider: FC<SearchProviderProps> = ({ children }) => {
   const [series, setSeries] = useState<Serie[]>([]);
   const [is_empty, setIsEmpty] = useState<boolean>(true);
 
-  const { data, status, isLoading, refetch } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: [
       "search",
       payload?.ui.name,
       payload?.timespan.name,
-      payload?.categories.map((it) => it.name),
+      payload?.categories.map((it) => it.name).join(','),
     ],
     queryFn: (): Promise<
       AxiosResponse<V1SuccessResponse<AccountDataSeries[]>>
@@ -74,8 +66,12 @@ export const SearchProvider: FC<SearchProviderProps> = ({ children }) => {
         var serie: Serie = {
           label: it.label,
           data: it.entries.map((ot) => {
+            let date = ot.date.includes(EMPTY_DATETIME) ?
+              dayjs(ot.date).add(1, 'day').format(SHORT_DATE_FORMAT) :
+              dayjs(ot.date).format(SHORT_DATE_FORMAT);
+
             var daily_data: DailyValue = {
-              date: dayjs(ot.date).format("MMM-DD"),
+              date,
               value: ot.entry,
             };
             return daily_data;

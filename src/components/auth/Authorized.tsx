@@ -14,13 +14,13 @@ export const Authorized: FC<AuthorizedProps> = ({ children }) => {
   const { me, status, loading, error, access_token, fetch, renew } = useAuth();
 
   useEffect(() => {
-    if (access_token === null && loading === false) {
+    if (access_token === null && status === "idle") {
       navigate("/welcome");
     }
     if (me == null && loading == false && error === null) {
       navigate("/");
     }
-  }, [access_token, me]);
+  }, [status, access_token, me]);
 
   useEffect(() => {
     if (loading == false && error?.message.includes("token expired")) {
@@ -35,6 +35,7 @@ export const Authorized: FC<AuthorizedProps> = ({ children }) => {
   if (status === "pending" && loading) {
     return <Section>Loading...</Section>;
   }
+
   return (
     <Section className="absolute inset-0">
       <Section {...Styles.wrapper}>

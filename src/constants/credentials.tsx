@@ -1,6 +1,6 @@
 export const Credentials = {
   Me: {
-    email: "cbolanosmx@gmail.com",
+    email: "cbolanos@gmail.com",
     password: "123456",
   },
   Joe: {
